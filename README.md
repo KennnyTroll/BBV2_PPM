@@ -23,7 +23,6 @@ To build BigBaseV2 you need:
 * run the following commands in the terminal:
 ```dos
 git clone https://github.com/KennnyTroll/BBV2-Fix.git --recurse-submodules
-cd BigBaseV2-fix
 GenerateProjects.bat
 ```
 Now, you will be able to open the solution, and simply build it in Visual Studio.
