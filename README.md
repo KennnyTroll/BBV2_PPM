@@ -22,6 +22,7 @@ To build BigBaseV2 you need:
 * Run the following commands in the terminal:
 ```dos
 git clone https://github.com/KennnyTroll/BBV2_PPM.git --recurse-submodules
+cd BBV2_PPM
 GenerateProjects.bat
 ```
 
