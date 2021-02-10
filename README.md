@@ -28,9 +28,16 @@ GenerateProjects.bat
 
 ## or 
 * unzip BBV2_PPM-main.zip  
+* delete vendor folder 
 * run Ze_Open_cmd_In_This_Dir.bat
 * run the following commands in the terminal:
 ```dos
+git init
+git submodule add https://github.com/fmtlib/fmt vendor/fmtlib
+git submodule add https://github.com/nlohmann/json vendor/json
+git submodule add https://github.com/TsudaKageyu/minhook vendor/MinHook
+git submodule add https://github.com/ocornut/imgui vendor/ImGui
+git submodule add https://github.com/KjellKod/g3log.git vendor/g3log
 GenerateProjects.bat
 ```
 
