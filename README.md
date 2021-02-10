@@ -19,6 +19,7 @@ To build BigBaseV2 you need:
 
 
 #### Create a new folder 
+* Go to the new folder created with the cmd terminal 
 * Run the following commands in the terminal:
 ```dos
 git clone https://github.com/KennnyTroll/BBV2_PPM.git --recurse-submodules
