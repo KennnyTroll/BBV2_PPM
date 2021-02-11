@@ -32,10 +32,10 @@ namespace big
 		return nullptr;
 	}
 
+	//m_set_cursor_pos_hook("SetCursorPos", memory::module("user32.dll").get_export("SetCursorPos").as<void*>(), &hooks::set_cursor_pos),
 	hooking::hooking() :
 		m_swapchain_hook(*g_pointers->m_swapchain, hooks::swapchain_num_funcs),
-		m_set_cursor_pos_hook("SetCursorPos", memory::module("user32.dll").get_export("SetCursorPos").as<void*>(), &hooks::set_cursor_pos),
-
+	
 		m_run_script_threads_hook("Script hook", g_pointers->m_run_script_threads, &hooks::run_script_threads),
 		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber)
 
@@ -58,7 +58,7 @@ namespace big
 	{
 		m_swapchain_hook.enable();
 		m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));
-		m_set_cursor_pos_hook.enable();
+		//m_set_cursor_pos_hook.enable();
 
 		m_run_script_threads_hook.enable();
 		m_convert_thread_to_fiber_hook.enable();
@@ -73,7 +73,7 @@ namespace big
 		m_convert_thread_to_fiber_hook.disable();
 		m_run_script_threads_hook.disable();
 
-		m_set_cursor_pos_hook.disable();
+		//m_set_cursor_pos_hook.disable();
 		SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_og_wndproc));
 		m_swapchain_hook.disable();
 	}
@@ -169,15 +169,14 @@ namespace big
 		return NULL;
 	}
 
-	BOOL hooks::set_cursor_pos(int x, int y)
-	{
-		TRY_CLAUSE
-		{
-			if (g_gui.m_opened)
-				return true;
-
-			return g_hooking->m_set_cursor_pos_hook.get_original<decltype(&set_cursor_pos)>()(x, y);
-		} EXCEPT_CLAUSE
-		return FALSE;
-	}
+	//BOOL hooks::set_cursor_pos(int x, int y)
+	//{
+	//	TRY_CLAUSE
+	//	{
+	//		if (g_gui.m_opened)
+	//			return true;
+	//		return g_hooking->m_set_cursor_pos_hook.get_original<decltype(&set_cursor_pos)>()(x, y);
+	//	} EXCEPT_CLAUSE
+	//	return FALSE;
+	//}
 }

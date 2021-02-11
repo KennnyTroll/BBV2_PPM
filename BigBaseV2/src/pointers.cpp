@@ -9,10 +9,15 @@ namespace big
 	{
 		memory::pattern_batch main_batch;
 
-		main_batch.add("Game state", "83 3D ? ? ? ? ? 75 17 8B 42 20 25", [this](memory::handle ptr)
+		main_batch.add("Swapchain", "48 8B 0D ? ? ? ? 48 8B 01 44 8D 43 01 33 D2 FF 50 40 8B C8", [this](memory::handle ptr)
 		{
-			m_game_state = ptr.add(2).rip().as<eGameState*>();
+				m_swapchain = ptr.add(3).rip().as<IDXGISwapChain**>();
 		});
+
+		//main_batch.add("Game state", "83 3D ? ? ? ? ? 75 17 8B 42 20 25", [this](memory::handle ptr)
+		//{
+		//	m_game_state = ptr.add(2).rip().as<eGameState*>();
+		//});
 
 		main_batch.add("Is session started", "40 38 35 ? ? ? ? 75 0E 4C 8B C3 49 8B D7 49 8B CE", [this](memory::handle ptr)
 		{
@@ -61,22 +66,21 @@ namespace big
 			m_script_handler_mgr = ptr.add(3).rip().as<CGameScriptHandlerMgr**>();
 		});
 
-		main_batch.add("Swapchain", "48 8B 0D ? ? ? ? 48 8B 01 44 8D 43 01 33 D2 FF 50 40 8B C8", [this](memory::handle ptr)
-		{
-			m_swapchain = ptr.add(3).rip().as<IDXGISwapChain**>();
-		});
-
 		main_batch.add("Model Spawn Bypass", "48 8B C8 FF 52 30 84 C0 74 05 48", [this](memory::handle ptr)
 		{
 			m_model_spawn_bypass = ptr.add(8).as<PVOID>();
 		});
 
+		LOG(big::INFO_TO_FILE) << "Finding patterns ...";
 		main_batch.run(memory::module(nullptr));
+		LOG(big::INFO_TO_FILE) << "Patterns found Ok";
 
+		LOG(big::INFO_TO_FILE) << "HWND = FindWindowW(L\'grcWindow\', nullptr)";
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);
 		if (!m_hwnd)
 			throw std::runtime_error("Failed to find the game's window.");
 
+		LOG(big::INFO_TO_FILE) << "g_pointers = this";
 		g_pointers = this;
 	}
 

@@ -13,10 +13,27 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 	using namespace big;
 	if (reason == DLL_PROCESS_ATTACH)
 	{
-
 		DisableThreadLibraryCalls(hmod);
 
 		g_hmodule = hmod;
+
+		static char g_logFilePath[MAX_PATH];
+		memset(g_logFilePath, 0, sizeof(g_logFilePath));
+		if (GetModuleFileNameA(hmod, g_logFilePath, MAX_PATH) != 0) {
+			size_t slash = -1;
+
+			for (size_t i = 0; i < strlen(g_logFilePath); i++) {
+				if (g_logFilePath[i] == '/' || g_logFilePath[i] == '\\') {
+					slash = i;
+				}
+			}
+			if (slash != -1)
+			{
+				g_logFilePath[slash + 1] = '\0';
+				strcpy_s(Menu::le_DLL_Path, g_logFilePath);
+			}
+		}
+
 		g_main_thread = CreateThread(nullptr, 0, [](PVOID) -> DWORD
 		{
 			while (!FindWindow(L"grcWindow", L"Grand Theft Auto V"))
@@ -25,14 +42,44 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 			auto logger_instance = std::make_unique<logger>();
 			try
 			{
-				LOG(RAW_GREEN_TO_CONSOLE) << u8R"kek(
- ______  _       ______                        ______  
-(____  \(_)     (____  \                      (_____ \ 
- ____)  )_  ____ ____)  ) ____  ___  ____ _   _ ____) )
-|  __  (| |/ _  |  __  ( / _  |/___)/ _  ) | | /_____/ 
-| |__)  ) ( ( | | |__)  | ( | |___ ( (/ / \ V /_______ 
-|______/|_|\_|| |______/ \_||_(___/ \____) \_/(_______)
-          (_____|)kek";
+				char chLogBuff[4096];
+				struct tm current_tm;
+				time_t current_time = time(NULL);
+				localtime_s(&current_tm, &current_time);
+				//sprintf_s(chLogBuff, "%02d/%02d/%d [%02d:%02d:%02d] PPM LOG Initialisation OK\n", current_tm.tm_mday, current_tm.tm_mon, (current_tm.tm_year + 1900), current_tm.tm_hour, current_tm.tm_min, current_tm.tm_sec);
+				sprintf_s(chLogBuff, "%02d/%02d/%d Logger initialisation OK", current_tm.tm_mday, current_tm.tm_mon, (current_tm.tm_year + 1900));
+				LOG(big::INFO_TO_FILE) << chLogBuff;
+				LOG(big::INFO_TO_FILE) << Menu::le_DLL_Path;
+
+				//Font Name: Bulbhead  
+				//Font Name: Caligraphy2 
+				//http: //patorjk.com/software/taag/#p=testall&f=Bulbhead&t=PPM
+				LOG(RAW_GREEN_TO_CONSOLE) << u8R"kek(                                                    
+        ##### ##         ##### ##         #####   ##    ##   
+     ######  /###     ######  /###     ######  /#### #####   
+    /#   /  /  ###   /#   /  /  ###   /#   /  /  ##### ##### 
+   /    /  /    ### /    /  /    ### /    /  /   # ##  # ##  
+       /  /      ##     /  /      ##     /  /    #     #     
+      ## ##      ##    ## ##      ##    ## ##    #     #     
+      ## ##      ##    ## ##      ##    ## ##    #     #     
+    /### ##      /   /### ##      /     ## ##    #     #     
+   / ### ##     /   / ### ##     /      ## ##    #     #     
+      ## ######/       ## ######/       ## ##    #     ##    
+      ## ######        ## ######        #  ##    #     ##    
+      ## ##            ## ##               /     #      ##   
+      ## ##            ## ##           /##/      #      ##   
+      ## ##            ## ##          /  #####           ##  
+ ##   ## ##       ##   ## ##         /     ##                 _  _  __ 
+###   #  /       ###   #  /          #                       ( \/ )/  )
+ ###    /         ###    /            ##                      \  /  )( 
+  #####/           #####/                                      \/  (__)
+    ###              ###                                     
+
+)kek";
+
+				g_settings.load();
+				LOG(INFO) << "Settings Loaded.";
+				
 				auto pointers_instance = std::make_unique<pointers>();
 				LOG(INFO) << "Pointers initialized.";
 
@@ -45,9 +92,6 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				auto hooking_instance = std::make_unique<hooking>();
 				LOG(INFO) << "Hooking initialized.";
 
-				g_settings.load();
-				LOG(INFO) << "Settings Loaded.";
-
 				g_script_mgr.add_script(std::make_unique<script>(&features::script_func));
 				g_script_mgr.add_script(std::make_unique<script>(&gui::script_func));
 				LOG(INFO) << "Scripts registered.";
@@ -55,6 +99,19 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
 
+				LOG(INFO) << ("============================================");
+				LOG(HACKER) << ("Hello you !!");
+				LOG(HACKER) << ("Keyboard control");
+				LOG(HACKER) << ("Open/Close Menu Key = Inser");//OpenMenuKey
+				LOG(HACKER) << ("Uninject Menu Key   = End");//UninjectLibraryKey
+				LOG(INFO) << ("--------------------------------------------");
+				LOG(HACKER) << ("XBox Gamepad control"); 
+				LOG(HACKER) << ("Open/Close Menu Key = PAD_LEFT + PAD_A");//OpenMenuKey
+				//LOG(HACKER) << ("Uninject Menu Key   = PAD_A");//UninjectLibraryKey
+				LOG(INFO) << ("============================================");
+
+				g_gui.m_opened = true;
+									
 				while (g_running)
 				{
 					std::this_thread::sleep_for(500ms);

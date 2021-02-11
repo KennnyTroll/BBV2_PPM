@@ -21,6 +21,16 @@ namespace big
 			};
 			const double min = 0., max = 10.;
 
+		
+			//ImGui::Checkbox("CheckBox ShowDemoWindow", &Menu::_ShowDemoWindow);
+			if (ImGui::Checkbox("CheckBox ShowDemoWindow", g_settings.options["bool demo Window"].get<bool*>()))
+			{
+				Menu::_ShowDemoWindow = g_settings.options["bool demo Window"].get<bool>();
+				LOG(INFO) << "settings save -> bool demo Window = " << Menu::_ShowDemoWindow;
+				g_settings.save();
+			}
+
+
 			//If you want to add a new option, you have to first declare it in settings.h's default_options, otherwise, this code will crash when trying to access an option that does not exist in memory.
 			if (ImGui::Checkbox("Bool", g_settings.options["demo bool"].get<bool*>()))
 				g_settings.save();
@@ -32,7 +42,8 @@ namespace big
 				g_settings.save();
 			if (ImGui::Bitfield("Bitfield", g_settings.options["demo bitset"].get<int64_t*>()))
 				g_settings.save();
-			
+		
+
 			if (ImGui::Button("Spawn an Adder"))
 			{
 				QUEUE_JOB_BEGIN_CLAUSE()
@@ -54,7 +65,9 @@ namespace big
 					if (*g_pointers->m_is_session_started)
 					{
 						DECORATOR::DECOR_SET_INT(vehicle, "MPBitset", 0);
-						ENTITY::_SET_ENTITY_SOMETHING(vehicle, TRUE); //True means it can be deleted by the engine when switching lobbies/missions/etc, false means the script is expected to clean it up.
+						//_SET_ENTITY_SOMETHING True means it can be deleted by the engine when switching lobbies/missions/etc, false means the script is expected to clean it up.
+						ENTITY::_SET_ENTITY_SOMETHING(vehicle, TRUE);
+						//_SET_ENTITY_SOMETHING True signifie qu'il peut être supprimé par le moteur lors du changement de lobby / missions / etc, false signifie que le script est censé le nettoyer. 
 						auto networkId = NETWORK::VEH_TO_NET(vehicle);
 						if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(vehicle))
 							NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
@@ -68,12 +81,16 @@ namespace big
 			{
 				*((PINT)nullptr) = 0xDEADBEEF;
 			}
+
 			ImGui::SameLine();
+
 			if (ImGui::Button("Test g3log crash within GTA V Script"))
 			{
 				QUEUE_JOB_BEGIN_CLAUSE()
 				{
-					//PED::_0xB782F8238512BAD5(PLAYER::PLAYER_PED_ID(), nullptr); //This causes a crash at GTA5.exe+5845356 and nothing of value was in the log in the stack dump because of the context switch to GTA 5's memory. If you encounter something similar, you will have to figure out where the crash occured in the GTA 5 exe, and trace back that native, and figure out which function is calling the native that is crashing.
+					//PED::_0xB782F8238512BAD5(PLAYER::PLAYER_PED_ID(), nullptr); 
+					//This causes a crash at GTA5.exe+5845356 and nothing of value was in the log in the stack dump because of the context switch to GTA 5's memory. If you encounter something similar, you will have to figure out where the crash occured in the GTA 5 exe, and trace back that native, and figure out which function is calling the native that is crashing.
+					// Cela provoque un crash au niveau de GTA5.exe + 5845356 et rien de valeur ne se trouvait dans le journal dans le vidage de pile en raison du basculement de contexte vers la mémoire de GTA 5. Si vous rencontrez quelque chose de similaire, vous devrez déterminer où le crash s'est produit dans l'exe GTA 5, retracer ce natif et déterminer quelle fonction appelle le natif qui plante. 
 					*((PINT)nullptr) = 0xDEADBEEF;
 				}
 				QUEUE_JOB_END_CLAUSE
@@ -83,6 +100,7 @@ namespace big
 
 			if (ImGui::Button("Unload"))
 			{
+				LOG(INFO) << "<Unload from menu button>";
 				g_running = false;
 			}
 			ImGui::EndTabItem();

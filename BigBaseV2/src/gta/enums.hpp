@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
 
-enum eGameState : std::uint32_t
-{
-	Playing = 0
-};
+//enum eGameState : std::uint32_t
+//{
+//	Playing = 0
+//};
 
 constexpr auto MAX_PLAYERS = 32;
 

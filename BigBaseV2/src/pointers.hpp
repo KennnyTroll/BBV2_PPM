@@ -14,7 +14,7 @@ namespace big
 	public:
 		HWND m_hwnd{};
 
-		eGameState *m_game_state{};
+		//eGameState *m_game_state{};
 		bool *m_is_session_started{};
 
 		CPedFactory **m_ped_factory{};

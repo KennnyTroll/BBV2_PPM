@@ -19,7 +19,7 @@ namespace big
 		static HRESULT swapchain_resizebuffers(IDXGISwapChain *this_, UINT buffer_count, UINT width, UINT height, DXGI_FORMAT new_format, UINT swapchain_flags);
 
 		static LRESULT wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-		static BOOL set_cursor_pos(int x, int y);
+		//static BOOL set_cursor_pos(int x, int y);
 	};
 
 	struct minhook_keepalive
@@ -44,7 +44,7 @@ namespace big
 
 		vmt_hook m_swapchain_hook;
 		WNDPROC m_og_wndproc;
-		detour_hook m_set_cursor_pos_hook;
+		//detour_hook m_set_cursor_pos_hook;
 
 		detour_hook m_run_script_threads_hook;
 		detour_hook m_convert_thread_to_fiber_hook;

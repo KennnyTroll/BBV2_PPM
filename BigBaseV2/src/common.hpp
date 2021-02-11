@@ -48,6 +48,8 @@
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
 
+#include "menu.h"
+
 #include "logger.hpp"
 
 #include "settings.h"
