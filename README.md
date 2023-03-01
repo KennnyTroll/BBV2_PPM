@@ -24,7 +24,7 @@ To build BigBaseV2 you need:
 ```dos
 git clone https://github.com/KennnyTroll/BBV2_PPM.git --recurse-submodules
 cd BBV2_PPM
-GenerateProjects.bat
+.\GenerateProjects.bat
 ```
 
 #### Or 
