@@ -28,9 +28,10 @@ cd BBV2_PPM
 ```
 
 #### Or 
-* Unzip BBV2_PPM-main.zip  
+* Unzip BBV2_PPM-main.zip 
+* Go in the new folder BBV2_PPM
 * Delete vendor folder 
-* Run Ze_Open_cmd_In_This_Dir.bat
+* Go in BBV2_PPM folder with the cmd terminal 
 * Run the following commands in the terminal:
 ```dos
 git init
@@ -39,7 +40,7 @@ git submodule add https://github.com/nlohmann/json vendor/json
 git submodule add https://github.com/TsudaKageyu/minhook vendor/MinHook
 git submodule add https://github.com/ocornut/imgui vendor/ImGui
 git submodule add https://github.com/KjellKod/g3log.git vendor/g3log
-GenerateProjects.bat
+.\GenerateProjects.bat
 ```
 
 ## End
